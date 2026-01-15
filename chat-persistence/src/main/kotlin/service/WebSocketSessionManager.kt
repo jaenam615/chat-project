@@ -23,13 +23,12 @@ class WebSocketSessionManager(
 
     private val userSession = ConcurrentHashMap<Long, MutableSet<WebSocketSession>>()
 
-    private val roomMemberKeyPrefix = "chat:room:members"
     private val serverRoomsKeyPrefix = "chat:server:rooms"
 
     @PostConstruct
     fun initialize() {
         redisMessageBroker.setLocalMessageHandler { roomId, message ->
-            TODO()
+            sendMessageToLocalRoom(roomId, message)
         }
     }
 
@@ -130,5 +129,22 @@ class WebSocketSessionManager(
                 }
             }
         }
+    }
+
+    fun isUserOnlineLocally(userId: Long): Boolean {
+        val sessions = userSession[userId] ?: return false
+
+        val openSession = sessions.filter { it.isOpen }
+
+        if (openSession.size != sessions.size) {
+            val closedSessions = sessions.filter { !it.isOpen }
+            sessions.removeAll(closedSessions)
+
+            if (sessions.isEmpty()) {
+                userSession.remove(userId)
+            }
+        }
+
+        return openSession.isNotEmpty()
     }
 }
