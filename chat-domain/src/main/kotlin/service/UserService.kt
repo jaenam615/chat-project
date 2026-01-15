@@ -12,7 +12,10 @@ interface UserService {
 
     fun getUserById(userId: Long): UserDto
 
-    fun searchUsers(query: String, pageable: Pageable): Page<UserDto>
+    fun searchUsers(
+        query: String,
+        pageable: Pageable,
+    ): Page<UserDto>
 
     // 사용자 상태
     fun updateLastSeen(userId: Long): UserDto

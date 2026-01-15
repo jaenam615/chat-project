@@ -46,5 +46,4 @@ class CacheConfig {
             .withCacheConfiguration("messages", configuration.entryTtl(Duration.ofMinutes(5)))
             .build()
     }
-
 }

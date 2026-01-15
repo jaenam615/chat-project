@@ -15,20 +15,18 @@ import java.util.concurrent.Executors
 
 @Configuration
 class RedisConfig {
-
     @Bean("distributedObjectMapper")
-    fun distributedObjectMapper(): ObjectMapper {
-        return ObjectMapper().apply {
+    fun distributedObjectMapper(): ObjectMapper =
+        ObjectMapper().apply {
             registerModule(JavaTimeModule())
             registerModule(KotlinModule.Builder().build())
             disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }
-    }
 
     @Bean
-    fun redisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, String> {
-        return RedisTemplate<String, String>().apply {
+    fun redisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, String> =
+        RedisTemplate<String, String>().apply {
             setConnectionFactory(connectionFactory)
             keySerializer = StringRedisSerializer()
             valueSerializer = StringRedisSerializer()
@@ -36,20 +34,19 @@ class RedisConfig {
             hashValueSerializer = StringRedisSerializer()
             afterPropertiesSet()
         }
-    }
 
     @Bean
-    fun redisMessageListenerContainer(
-        connectionFactory: RedisConnectionFactory,
-    ) : RedisMessageListenerContainer{
+    fun redisMessageListenerContainer(connectionFactory: RedisConnectionFactory): RedisMessageListenerContainer {
         RedisMessageListenerContainer().apply {
             setConnectionFactory(connectionFactory)
-            setTaskExecutor(Executors.newCachedThreadPool {runnable ->
-                Thread(runnable).apply {
-                    name = "redis-message-listener-container-${System.currentTimeMillis()}"
-                    isDaemon = true
-                }
-            })
+            setTaskExecutor(
+                Executors.newCachedThreadPool { runnable ->
+                    Thread(runnable).apply {
+                        name = "redis-message-listener-container-${System.currentTimeMillis()}"
+                        isDaemon = true
+                    }
+                },
+            )
             setErrorHandler { t ->
                 println("Redis Message Listener Error: $t")
                 t.printStackTrace()
