@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":chat-domain"))
     implementation(project(":chat-persistence"))
     implementation(project(":chat-websocket"))
+    implementation(project(":chat-api"))
 
     // 메인 애플리케이션 실행에 필요한 의존성만
     implementation("org.springframework.boot:spring-boot-starter")

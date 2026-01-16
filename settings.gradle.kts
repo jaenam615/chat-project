@@ -8,4 +8,5 @@ include(
     "chat-domain",
     "chat-persistence",
     "chat-websocket",
+    "chat-api",
 )
