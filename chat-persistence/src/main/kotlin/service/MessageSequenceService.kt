@@ -9,7 +9,7 @@ class MessageSequenceService(
 ) {
     private val prefix = "chat:sequence"
 
-    fun getNextSequence(chatRoomId: String): Long {
+    fun getNextSequence(chatRoomId: Long): Long {
         val key = "$prefix:$chatRoomId"
 
         // INCR 명령어를 사용하여 원자적인 증가
